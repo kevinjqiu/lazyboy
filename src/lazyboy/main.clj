@@ -1,17 +1,20 @@
 (ns lazyboy.main
-  (:use clj-webdriver.core))
+  (:use [clj-webdriver.core
+         :only [start
+                find-it
+                input-text
+                click]]))
+
+(def URL "https://signup.netflix.com/Login")
 
 (defn -main [& args]
-  (def b (start {:browser :firefox} "https://github.com"))
-  (-> b
-    (find-it {:text "Login"})
-    click)
-  (-> b
-    (find-it {:class "text" :name "login"})
-    (input-text "foo"))
-  (-> b
-    (find-it {:xpath "//input[@id='password']"})
-    (input-text "bar"))
-  (-> b
-    (find-it {:tag :input :value #"Log"})
-    click))
+  (let [b (start {:browser :firefox} URL)]
+    (-> b
+      (find-it {:id "email"})
+      (input-text "foo"))
+    (-> b
+      (find-it {:id "password"})
+      (input-text "bar"))
+    (-> b
+      (find-it {:id "login-form-contBtn"})
+      click)))
