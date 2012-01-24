@@ -13,9 +13,7 @@
        ["-f" "--config-file"]))
 
 (defpage "/netflix/start" []
-  (binding [netflix/*username* (:username @options)
-            netflix/*password* (:password @options)]
-    (netflix/login)))
+  (netflix/login (:username @options) (:password @options)))
 
 (defn -main [& args]
   (let [parsed-opts (first (parse-args args))]
