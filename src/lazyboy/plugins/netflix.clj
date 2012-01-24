@@ -1,20 +1,42 @@
 (ns lazyboy.plugins.netflix
   (:use [lazyboy.core :only [b]]
-        [clj-webdriver.core :only [get-url find-it input-text click]]))
+        [clj-webdriver.core :only [attribute get-url find-it find-them input-text click]])
+  (:import [org.openqa.selenium By]))
 
 (def ^:dynamic *username* "")
 (def ^:dynamic *password* "")
 
 (def URL "https://signup.netflix.com/Login")
 
-(defn login []
-  (get-url b URL)
-  (-> b
-    (find-it {:id "email"})
-    (input-text *username*))
-  (-> b
-    (find-it {:id "password"})
-    (input-text *password*))
-  (-> b
-    (find-it {:id "login-form-contBtn"})
-    click))
+(defrecord Movie [id name url])
+
+(defn login
+  ([username password]
+    (binding [*username* username
+              *password* password]
+      (login)))
+  ([]
+    (get-url b URL)
+    (-> b
+      (find-it {:id "email"})
+      (input-text *username*))
+    (-> b
+      (find-it {:id "password"})
+      (input-text *password*))
+    (-> b
+      (find-it {:id "login-form-contBtn"})
+      click)))
+
+(defn- create-movie-from-elem
+  [elem]
+  (let [webelem (:webelement elem)
+        img-elem (.findElement webelem (By/tagName "img"))
+        a-elem (.findElement webelem (By/tagName "a"))]
+    (Movie.
+      (attribute elem "id")
+      (.getAttribute img-elem "alt")
+      (.getAttribute a-elem "href"))))
+
+(defn get-movies
+  []
+  (map create-movie-from-elem (find-them b {:css "span.boxShot"})))

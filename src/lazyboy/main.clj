@@ -12,7 +12,7 @@
   (cli args
        ["-f" "--config-file"]))
 
-(defpage "/start-netflix" []
+(defpage "/netflix/start" []
   (binding [netflix/*username* (:username @options)
             netflix/*password* (:password @options)]
     (netflix/login)))
