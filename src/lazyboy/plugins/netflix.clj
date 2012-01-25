@@ -10,6 +10,8 @@
 
 (defrecord Movie [id name url])
 
+(defrecord Genre [name url])
+
 (defn login
   ([username password]
     (binding [*username* username
@@ -27,7 +29,7 @@
       (find-it {:id "login-form-contBtn"})
       click)))
 
-(defn- create-movie-from-elem
+(defn- create-movie
   [elem]
   (let [webelem (:webelement elem)
         img-elem (.findElement webelem (By/tagName "img"))
@@ -37,6 +39,18 @@
       (.getAttribute img-elem "alt")
       (.getAttribute a-elem "href"))))
 
-(defn get-movies
+(defn movies
   []
-  (map create-movie-from-elem (find-them b {:css "span.boxShot"})))
+  (map create-movie (find-them b {:css "span.boxShot"})))
+
+(defn- create-genre [elem]
+  (let [webelem (:webelement elem)
+        a-elem (.findElement webelem (By/tagName "a"))
+        get-title (fn [title] (second (re-matches #"Go to (.*)" title)))]
+    (Genre. 
+      (get-title (.getAttribute a-elem "title"))
+      (.getAttribute a-elem "href"))))
+
+(defn genres
+  []
+  (map create-genre (find-them b {:css "#nav-edgenre-dd .nav-item"})))
