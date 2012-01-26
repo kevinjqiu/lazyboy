@@ -13,7 +13,8 @@
        ["-f" "--config-file"]))
 
 (defpage [:post "/netflix/start"] []
-  (netflix/login (:username @options) (:password @options)))
+  (netflix/login (:username @options) (:password @options))
+  "")
 
 (defpage [:get "/netflix/genres"] []
   (json-str (netflix/genres)))
