@@ -1,4 +1,4 @@
-(ns lazyboy.plugins.netflix
+(ns lazyboy.netflix
   (:use [lazyboy.core :only [b]]
         [clj-webdriver.core :only [attribute get-url find-it find-them input-text click]])
   (:import [org.openqa.selenium By]))
