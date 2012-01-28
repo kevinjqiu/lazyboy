@@ -1,27 +1,32 @@
 (ns lazyboy.netflix
-  (:use [lazyboy.core :only [b]]
-        [clj-webdriver.core :only [attribute get-url find-it find-them input-text click]])
+  (:use [clj-webdriver.core :only [attribute get-url find-it find-them input-text click]])
   (:import [org.openqa.selenium By]))
 
-(def ^:dynamic *username* "")
-(def ^:dynamic *password* "")
+;(def ^:dynamic *username* "")
+;(def ^:dynamic *password* "")
 
 (def URL "https://signup.netflix.com/Login")
 
 (defrecord Movie [id name url])
-
 (defrecord Genre [name url])
 
+;(defn login
+;  ([b username password]
+;    (binding [*username* username
+;              *password* password]
+;      (login)))
+;  ([b]
+;    (get-url b URL)
+;    (-> b (find-it {:id "email"}) (input-text *username*))
+;    (-> b (find-it {:id "password"}) (input-text *password*))
+;    (-> b (find-it {:id "login-form-contBtn"}) click)))
+;
 (defn login
-  ([username password]
-    (binding [*username* username
-              *password* password]
-      (login)))
-  ([]
-    (get-url b URL)
-    (-> b (find-it {:id "email"}) (input-text *username*))
-    (-> b (find-it {:id "password"}) (input-text *password*))
-    (-> b (find-it {:id "login-form-contBtn"}) click)))
+  [b username password]
+  (get-url b URL)
+  (-> b (find-it {:id "email"}) (input-text username))
+  (-> b (find-it {:id "password"}) (input-text password))
+  (-> b (find-it {:id "login-form-contBtn"}) click))
 
 (defn- create-movie
   [elem]
@@ -34,7 +39,7 @@
       (.getAttribute a-elem "href"))))
 
 (defn movies
-  []
+  [b]
   (map create-movie (find-them b {:css "span.boxShot"})))
 
 (defn- create-genre [elem]
@@ -46,5 +51,5 @@
       (.getAttribute a-elem "href"))))
 
 (defn genres
-  []
+  [b]
   (map create-genre (find-them b {:css "#nav-edgenre-dd .nav-item"})))
