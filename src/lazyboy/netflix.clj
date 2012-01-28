@@ -19,15 +19,9 @@
       (login)))
   ([]
     (get-url b URL)
-    (-> b
-      (find-it {:id "email"})
-      (input-text *username*))
-    (-> b
-      (find-it {:id "password"})
-      (input-text *password*))
-    (-> b
-      (find-it {:id "login-form-contBtn"})
-      click)))
+    (-> b (find-it {:id "email"}) (input-text *username*))
+    (-> b (find-it {:id "password"}) (input-text *password*))
+    (-> b (find-it {:id "login-form-contBtn"}) click)))
 
 (defn- create-movie
   [elem]
