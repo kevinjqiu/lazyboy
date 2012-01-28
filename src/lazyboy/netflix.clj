@@ -7,15 +7,15 @@
 (defrecord Movie [id name url])
 (defrecord Genre [name url])
 
-(defn login
-  [b username password]
+;(def *genre-map* (ref {}))
+
+(defn login [b username password]
   (get-url b URL)
   (-> b (find-it {:id "email"}) (input-text username))
   (-> b (find-it {:id "password"}) (input-text password))
   (-> b (find-it {:id "login-form-contBtn"}) click))
 
-(defn- create-movie
-  [elem]
+(defn- create-movie [elem]
   (let [webelem (:webelement elem)
         img-elem (.findElement webelem (By/tagName "img"))
         a-elem (.findElement webelem (By/tagName "a"))]
@@ -24,8 +24,7 @@
       (.getAttribute img-elem "alt")
       (.getAttribute a-elem "href"))))
 
-(defn movies
-  [b]
+(defn movies [b]
   (map create-movie (find-them b {:css "span.boxShot"})))
 
 (defn- create-genre [elem]
@@ -36,6 +35,5 @@
       (get-title (.getAttribute a-elem "title"))
       (.getAttribute a-elem "href"))))
 
-(defn genres
-  [b]
+(defn genres [b]
   (map create-genre (find-them b {:css "#nav-edgenre-dd .nav-item"})))
