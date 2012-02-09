@@ -13,6 +13,7 @@
   (cli args
     ["-p" "--port" :parse-fn #(Integer. %) :default 5000]))
 
+; TODO: write this fn as let-fn in -main
 (defn handler [in out]
   (let [r (reader in)
         w (PrintWriter. (writer out))]
