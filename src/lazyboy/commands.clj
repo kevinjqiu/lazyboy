@@ -20,4 +20,13 @@
       (mouse-move x y)
       {:response "done"})))
 
+; TODO: macro version
+;(defhandler :mouse-move
+;  [args]
+;  (let [x (Integer. (:x args))
+;        y (Integer. (:y args))]
+;    (do
+;      (mouse-move x y)
+;      {:response "done"})))
+
 (add-command :mouse-move mouse-move-handler)
