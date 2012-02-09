@@ -1,11 +1,10 @@
 (ns lazyboy.main
   (:use [clojure.tools.cli]
-        ;TODO: add logging
-        ;[clojure.tools.logging]
-        [clojure.java.io]
+        [clojure.tools.logging :only (info)]
         [clojure.data.json :only (read-json write-json)]
         [server.socket])
-  (:require [clojure.string :as string]
+  (:require [clojure.java.io :as io]
+            [clojure.string :as string]
             [lazyboy.commands :as cmds])
   (:import [java.io PrintWriter]))
 
@@ -15,8 +14,8 @@
 
 ; TODO: write this fn as let-fn in -main
 (defn handler [in out]
-  (let [r (reader in)
-        w (PrintWriter. (writer out))]
+  (let [r (io/reader in)
+        w (PrintWriter. (io/writer out))]
     (loop []
       (let [raw-input (.readLine r)
             request (read-json raw-input)
@@ -27,4 +26,5 @@
 
 (defn -main [& args]
   (let [opts (first (parse-args args))]
-    (create-server (:port opts) handler)))
+    (create-server (:port opts) handler)
+    (info "Server started")))
