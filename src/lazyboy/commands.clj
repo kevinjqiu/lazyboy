@@ -1,6 +1,6 @@
-(ns lazyboy.commands)
+(ns lazyboy.commands
+  (:use [lazyboy.robot :only (mouse-move)]))
 
-;(declare command-map)
 (def command-map (atom {}))
 
 (defn get-command [command-str]
@@ -13,12 +13,11 @@
   (let [command-handler (get-command command)]
     (command-handler args)))
 
-(defn- mouse-move [args]
-  (let [x (:x args)
-        y (:y args)]
-    {:response {:command "mouse-move" :x x :y y}}))
+(defn- mouse-move-handler [args]
+  (let [x (Integer. (:x args))
+        y (Integer. (:y args))]
+    (do
+      (mouse-move x y)
+      {:response "done"})))
 
-(add-command :mouse-move mouse-move)
-
-;(def command-map 
-;  {:mouse-move mouse-move})
+(add-command :mouse-move mouse-move-handler)
