@@ -1,7 +1,8 @@
 (ns lazyboy.main
   (:use [clojure.tools.cli]
+        ;[clojure.tools.logging]
         [clojure.java.io]
-        [clojure.data.json :only (read-json)]
+        [clojure.data.json :only (read-json write-json)]
         [server.socket])
   (:require [clojure.string :as string]))
 
@@ -9,16 +10,21 @@
   (cli args
     ["-p" "--port" :parse-fn #(Integer. %) :default 5000]))
 
+(defn dispatch [command request]
+  {})
+
 (defn handler [in out]
   (let [r (reader in)
         w (writer out)]
     (loop []
-      (let [input (.readLine r)
-            request (read-json input)]
+      (let [raw-input (.readLine r)
+            request (read-json raw-input)
+            response (dispatch (:command request) request)]
+        ;(write-json response w true))
         (doto w
-          (.write input)
+          (.write raw-input)
           (.newLine)
-          (.write (str request))
+          (.write (str response))
           (.newLine)
           (.flush)))
       (recur))))
