@@ -1,7 +1,7 @@
 (ns lazyboy.commands
   (:use [lazyboy.robot :only (mouse-move)]))
 
-(def command-map (atom {}))
+(defonce command-map (atom {}))
 
 (defn get-command [command-str]
   ((keyword command-str) @command-map))
