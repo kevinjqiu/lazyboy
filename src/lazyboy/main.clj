@@ -1,18 +1,28 @@
 (ns lazyboy.main
-  (:use [clojure.java.io :only (reader file)]
-        [clojure.tools.cli]
+  (:use [clojure.tools.cli]
+        [clojure.java.io]
         [clojure.data.json :only (read-json)]
-        [lazyboy.routes])
-  (:require [noir.server :as server]))
-
-(def options (ref {}))
+        [server.socket])
+  (:require [clojure.string :as string]))
 
 (defn- parse-args [args]
   (cli args
-       ["-f" "--config-file"]))
+    ["-p" "--port" :parse-fn #(Integer. %) :default 5000]))
+
+(defn handler [in out]
+  (let [r (reader in)
+        w (writer out)]
+    (loop []
+      (let [input (.readLine r)
+            request (read-json input)]
+        (doto w
+          (.write input)
+          (.newLine)
+          (.write (str request))
+          (.newLine)
+          (.flush)))
+      (recur))))
 
 (defn -main [& args]
-  (let [parsed-opts (first (parse-args args))]
-    (dosync
-      (ref-set options (read-json (reader (:config-file parsed-opts)))))
-    (server/start (:port @options))))
+  (let [opts (first (parse-args args))]
+    (create-server (:port opts) handler)))
