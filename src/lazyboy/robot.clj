@@ -1,5 +1,5 @@
 (ns lazyboy.robot
-  (:import [java.awt Robot]
+  (:import [java.awt Robot MouseInfo]
            [java.awt.event InputEvent]))
 
 (def robot (Robot.))
@@ -12,3 +12,6 @@
 
 (defn mouse-right-click []
   (.mousePress robot InputEvent/BUTTON3_MASK))
+
+(defn mouse-location []
+  (.getLocation (MouseInfo/getPointerInfo)))

@@ -32,6 +32,8 @@
 
 ; TODO: macro version
 
+;(add-command :mouse-up mouse-up-handler)
 (add-command :mouse-move mouse-move-handler)
+;(add-command :mouse-down mouse-down-handler)
 (add-command :mouse-left-click mouse-left-click-handler)
 (add-command :mouse-right-click mouse-right-click-handler)
