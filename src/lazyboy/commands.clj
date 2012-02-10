@@ -1,5 +1,7 @@
 (ns lazyboy.commands
-  (:use [lazyboy.robot :only (mouse-move)]))
+  (:use [lazyboy.robot :only (mouse-move
+                              mouse-left-click
+                              mouse-right-click)]))
 
 (defonce command-map (atom {}))
 
@@ -20,13 +22,16 @@
       (mouse-move x y)
       {:response "done"})))
 
+(defn- mouse-left-click-handler [args]
+  (mouse-left-click)
+  {:response "done"})
+
+(defn- mouse-right-click-handler [args]
+  (mouse-right-click)
+  {:response "done"})
+
 ; TODO: macro version
-;(defhandler :mouse-move
-;  [args]
-;  (let [x (Integer. (:x args))
-;        y (Integer. (:y args))]
-;    (do
-;      (mouse-move x y)
-;      {:response "done"})))
 
 (add-command :mouse-move mouse-move-handler)
+(add-command :mouse-left-click mouse-left-click-handler)
+(add-command :mouse-right-click mouse-right-click-handler)
