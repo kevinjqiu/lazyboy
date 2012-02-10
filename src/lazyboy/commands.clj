@@ -1,5 +1,6 @@
 (ns lazyboy.commands
   (:use [lazyboy.robot :only (mouse-move
+                              mouse-down
                               mouse-left-click
                               mouse-right-click)]))
 
@@ -22,6 +23,13 @@
       (mouse-move x y)
       {:response "done"})))
 
+(defn- mouse-down-handler [args]
+  (let [x (Integer. (:x args))
+        y (Integer. (:y args))]
+    (do
+      (mouse-down x y)
+      {:response "done"})))
+
 (defn- mouse-left-click-handler [args]
   (mouse-left-click)
   {:response "done"})
@@ -34,6 +42,6 @@
 
 ;(add-command :mouse-up mouse-up-handler)
 (add-command :mouse-move mouse-move-handler)
-;(add-command :mouse-down mouse-down-handler)
+(add-command :mouse-down mouse-down-handler)
 (add-command :mouse-left-click mouse-left-click-handler)
 (add-command :mouse-right-click mouse-right-click-handler)
