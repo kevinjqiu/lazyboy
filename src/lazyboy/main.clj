@@ -1,7 +1,8 @@
 (ns lazyboy.main
   (:use [clojure.tools.cli]
         [clojure.tools.logging :only (info)]
-        [clojure.data.json :only (read-json write-json)]
+        [clojure.data.json :only (write-json)]
+        [lazyboy.request :only (request-factory dispatch)]
         [server.socket])
   (:require [clojure.java.io :as io]
             [clojure.string :as string]
@@ -12,14 +13,13 @@
   (cli args
     ["-p" "--port" :parse-fn #(Integer. %) :default 5000]))
 
-; TODO: write this fn as let-fn in -main
 (defn handler [in out]
   (let [r (io/reader in)
         w (PrintWriter. (io/writer out))]
     (loop []
       (let [raw-input (.readLine r)
-            request (read-json raw-input)
-            response (cmds/dispatch (:command request) (:args request))]
+            request (request-factory raw-input)
+            response (dispatch request)]
         (write-json response w true)
         (.flush w))
       (recur))))
