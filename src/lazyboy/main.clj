@@ -20,7 +20,7 @@
       (let [raw-input (.readLine r)
             request (request-factory raw-input)
             response (dispatch request)]
-        (write-json response w true)
+        (.write w "ok")
         (.flush w))
       (recur))))
 

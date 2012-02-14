@@ -43,3 +43,11 @@
 (add-command :mouse-down mouse-down-handler)
 (add-command :mouse-left-click mouse-left-click-handler)
 (add-command :mouse-right-click mouse-right-click-handler)
+
+(defmacro defcmd [command-name robot-command]
+  (let [handler-symbol (symbol (str command-name "-handler"))
+        command-keyword (keyword command-name)]
+    `(do
+      (defn ~handler-symbol [a] body)
+      (add-command ~command-keyword ~handler-symbol))))
+(defcmd mouse-move-2 (println "bar"))

@@ -1,11 +1,11 @@
 (ns lazyboy.request
   (:use [clojure.data.json :only (read-json)]))
 
-(defn request [raw-input]
+(defrecord Request [command args])
+
+(defn request-factory [raw-input]
   (let [req-obj (read-json raw-input)]
     (Request. (:command req-obj) (:args req-obj))))
-
-(defrecord Request [command args])
 
 (defprotocol IDispatch
   (dispatch [request]))
