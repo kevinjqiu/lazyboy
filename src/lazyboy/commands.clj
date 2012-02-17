@@ -16,38 +16,29 @@
   (let [command-handler (get-command command)]
     (command-handler args)))
 
-(defn- mouse-move-handler [args]
+(defmacro defcmd [cmd-keyword args & body]
+  `(let [handler-name# (name ~cmd-keyword)]
+     (defn handler-name# ~args ~@body)
+     (add-command ~cmd-keyword (var handler-name#))))
+
+(defcmd :mouse-move [args]
   (let [x (Integer. (:x args))
         y (Integer. (:y args))]
     (do
       (mouse-move x y)
       {:response "done"})))
 
-(defn- mouse-down-handler [args]
+(defcmd :mouse-down [args]
   (let [x (Integer. (:x args))
         y (Integer. (:y args))]
     (do
       (mouse-down x y)
       {:response "done"})))
 
-(defn- mouse-left-click-handler [args]
+(defcmd :mouse-left-click [args]
   (mouse-left-click)
   {:response "done"})
 
-(defn- mouse-right-click-handler [args]
+(defcmd :mouse-right-click [args]
   (mouse-right-click)
   {:response "done"})
-
-; TODO: macro version
-(add-command :mouse-move mouse-move-handler)
-(add-command :mouse-down mouse-down-handler)
-(add-command :mouse-left-click mouse-left-click-handler)
-(add-command :mouse-right-click mouse-right-click-handler)
-
-(defmacro defcmd [command-name robot-command]
-  (let [handler-symbol (symbol (str command-name "-handler"))
-        command-keyword (keyword command-name)]
-    `(do
-      (defn ~handler-symbol [a] body)
-      (add-command ~command-keyword ~handler-symbol))))
-(defcmd mouse-move-2 (println "bar"))
