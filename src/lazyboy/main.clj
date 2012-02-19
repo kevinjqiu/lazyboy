@@ -17,11 +17,13 @@
   (let [r (io/reader in)
         w (PrintWriter. (io/writer out))]
     (loop []
-      (let [raw-input (.readLine r)
-            request (request-factory raw-input)
-            response (dispatch request)]
-        (.write w "ok")
-        (.flush w))
+      (try
+        (let [raw-input (.readLine r)
+              request (request-factory raw-input)
+              response (dispatch request)]
+          (.write w "ok")
+          (.flush w))
+        (catch Exception e (println e)))
       (recur))))
 
 (defn -main [& args]
